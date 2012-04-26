@@ -1,0 +1,1 @@
+var unistroke = require('../pkg/cjs/unistroke');
