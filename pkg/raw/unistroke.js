@@ -151,6 +151,9 @@ function Stroke(points, opts) {
     // scale the points
     scalePoints(this.points, this.squareSize);
     
+    // translate
+    translatePoints(this.points, this.origin);
+    
     // vectorize
     this.vector = vectorize(this.points);
 }
@@ -261,19 +264,15 @@ function optimalCosineDistance(v1, v2) {
     }
     
     angle = Math.atan(b / a);
-    return Math.acos(a * Math.cos(angle) + b * Math.sin(angle));
+    return b === 0 ? b : Math.acos(a * Math.cos(angle) + b * Math.sin(angle));
 }
 
-function rotatePoints(points, angle, createNew) {
+function rotatePoints(points, angle) {
     var c = centroid(points),
         cx = c[0],
         cy = c[1],
         cos = Math.cos(angle),
         sin = Math.sin(angle);
-    
-    if (createNew) {
-        points = [].concat(points);
-    }
     
     // update the points
     for (var ii = 0, count = points.length; ii < count; ii++) {
@@ -289,15 +288,11 @@ function rotatePoints(points, angle, createNew) {
     return points;
 }
 
-function scalePoints(points, size, createNew) {
+function scalePoints(points, size) {
     // calculate the bounds
     var bounds = calcBounds(points),
         scaleX = size / bounds.width,
         scaleY = size / bounds.height;
-    
-    if (createNew) {
-        points = [].concat(points);
-    }
     
     // update the points
     for (var ii = 0, count = points.length; ii < count; ii++) {
@@ -310,12 +305,8 @@ function scalePoints(points, size, createNew) {
     return points;
 }
 
-function translatePoints(points, target, createNew) {
+function translatePoints(points, target) {
     var c = centroid(points);
-    
-    if (createNew) {
-        points = [].concat(points);
-    }
     
     // iterate through the points and 
     for (var ii = 0, count = points.length; ii < count; ii++) {
