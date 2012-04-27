@@ -12,7 +12,6 @@ describe('exact match tests', function() {
         it('should be able to recognize an ' + stroke, function() {
             var match = unistroke.match(unistroke.get(stroke));
             
-            console.log(match);
             expect(match.stroke.name).to.equal(stroke);
         });
     });

@@ -24,7 +24,7 @@
     "url": "http://github.com/DamonOehlman/unistroke/issues"
   },
   "scripts": {
-    "test": "mocha --reporter spec"
+    "test": "./node_modules/mocha/bin/mocha --reporter spec"
   },
   "contributors": [],
   "optionalDependencies": {}
