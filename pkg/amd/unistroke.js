@@ -67,15 +67,34 @@ define('unistroke', [], function() {
   function Stroke(points, opts) {
       var pathlen = 0, 
           ii, 
-          count1d = points.length,
+          count = points.length,
           accumulatedDist = 0;
+          
+      // if the array is a 1d array, then convert to 2d
+      if (points.length && typeof points[0] == 'number') {
+          // reset the points2d array
+          var points2d = [];
+  
+          // copy 1d array elements across to the 2d array
+          for (ii = 0; ii < count; ii += 2) {
+              points2d[points2d.length] = [points[ii], points[ii + 1]];
+          }
+          
+          points = points2d;
+          count = points.length;
+      }
       
+      // ensure points are numeric
+      for (ii = points.length; ii--; ) {
+          points[ii] = [parseFloat(points[ii][0]), parseFloat(points[ii][1])];
+      } 
+  
       // ensure we have options
       opts = opts || {};
       
       // calculate the path length
-      for (ii = 2; ii < count1d; ii += 2) {
-          pathlen += distance(points[ii - 2], points[ii - 1], points[ii], points[ii + 1]);
+      for (ii = 1; ii < count; ii++) {
+          pathlen += distance(points[ii - 1][0], points[ii - 1][1], points[ii][0], points[ii][1]);
       }
       
       // initialise members
@@ -95,27 +114,25 @@ define('unistroke', [], function() {
       this.interval = pathlen / this.segments;
       
       // create the points array
-      this.points = [[points[0], points[1]]];
-      
-      // vectorize
-      this.vector = vectorize(points);
+      this.points = [points[0]];
       
       // copy from the 1d source array into a 2d array
       // and resample as per the original implementation
-      for (ii = 2; ii < count1d; ii += 2) {
-          var x1 = points[ii - 2], y1 = points[ii - 1],
-              x2 = points[ii],     y2 = points[ii + 1],
+      for (ii = 1; ii < points.length; ii++) {
+          var x1 = points[ii - 1][0], y1 = points[ii - 1][1],
+              x2 = points[ii][0],     y2 = points[ii][1],
               dist = distance(x1, y1, x2, y2);
-          
+              
           // if the accumlated distance is greater than the interval length
           if (accumulatedDist + dist > this.interval) {
               var qx = x1 + ((this.interval - accumulatedDist) / dist) * (x2 - x1),
-                  qy = y1 + ((this.interval - accumulatedDist) / dist) * (y2 - y1);
+                  qy = y1 + ((this.interval - accumulatedDist) / dist) * (y2 - y1),
+                  q = [qx, qy];
                   
               // add the next point
-              this.points[this.points.length] = [qx, qy];
-              
-              // points.splice(i, 0, q); // insert 'q' at position i in points s.t. 'q' will be the next i
+              this.points[this.points.length] = q;
+              points.splice(ii, 0, q); // insert 'q' at position i in points s.t. 'q' will be the next i
+  
               // reset the accumulated dist
               accumulatedDist = 0;
           }
@@ -126,7 +143,7 @@ define('unistroke', [], function() {
       
       // somtimes we fall a rounding-error short of adding the last point, so add it if so
       if (this.points.length === this.segments) {
-          this.points[this.points.length] = points.slice(-2);
+          this.points[this.points.length] = points[points.length - 1];
       }
       
       // rotate the points
@@ -134,6 +151,9 @@ define('unistroke', [], function() {
       
       // scale the points
       scalePoints(this.points, this.squareSize);
+      
+      // vectorize
+      this.vector = vectorize(this.points);
   }
   
   function get(name) {
@@ -236,13 +256,13 @@ define('unistroke', [], function() {
   function optimalCosineDistance(v1, v2) {
       var a = 0, b = 0, angle;
       
-      for (var ii = 0, count = Math.min(v1.length, v2.length); ii < count; ii += 2) {
+      for (var ii = 0, count = v1.length; ii < count; ii += 2) {
           a += v1[ii] * v2[ii] + v1[ii + 1] * v2[ii + 1];
           b += v1[ii] * v2[ii + 1] - v1[ii + 1] * v2[ii];
       }
       
       angle = Math.atan(b / a);
-      return b !== 0 ? Math.acos(a * Math.cos(angle) + b * Math.sin(angle)) : 0;
+      return Math.acos(a * Math.cos(angle) + b * Math.sin(angle));
   }
   
   function rotatePoints(points, angle, createNew) {
@@ -311,12 +331,15 @@ define('unistroke', [], function() {
   
   function vectorize(points) {
       var sum = 0,
-          vector = [].concat(points),
-          ii, magnitude;
+          vector = [],
+          ii, count, magnitude;
           
       // calculate the sum
-      for (ii = vector.length; ii--; ) {
-          sum += vector[ii] * vector[ii];
+      for (ii = 0, count = points.length; ii < count; ii++) {
+          var x = vector[vector.length] = points[ii][0],
+              y = vector[vector.length] = points[ii][1];
+          
+          sum += x * x + y * y;
       }
       
       // calculate the magnitude of the vector
