@@ -1,32 +1,27 @@
 {
-  "name": "matchme",
-  "description": "Simple Object Query Language",
+  "name": "unistroke",
+  "description": "Algorithmically equivalent but more Javascripty version of the Washington $1 Unistroke Regognizer",
   "author": "Damon Oehlman <damon.oehlman@sidelab.com>",
   "tags": [
-    "query",
-    "match",
-    "filter"
+    "gesture",
+    "unistroke"
   ],
-  "version": "0.1.2",
-  "main": "pkg/cjs/matchme",
+  "version": "0.1.0",
+  "main": "pkg/cjs/unistroke",
   "engines": {
     "node": ">= 0.4.x < 0.7.0"
   },
   "dependencies": {},
   "devDependencies": {
-    "interleave": "0.1.x",
-    "uglify-js": "*",
     "expect.js": "0.1.x",
-    "underscore": "1.3.x",
-    "mocha": "*",
-    "chai": "*"
+    "mocha": "1.0.x"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/DamonOehlman/matchme.git"
+    "url": "git://github.com/DamonOehlman/unistroke.git"
   },
   "bugs": {
-    "url": "http://github.com/DamonOehlman/matchme/issues"
+    "url": "http://github.com/DamonOehlman/unistroke/issues"
   },
   "scripts": {
     "test": "mocha --reporter spec"

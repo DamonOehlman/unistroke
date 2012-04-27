@@ -61,13 +61,12 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
-var strokes = [];
+var templates = [];
 
 function Stroke(points, opts) {
     var pathlen = 0, 
         ii, 
         count1d = points.length,
-        segmentCount = count1d/2 - 1,
         accumulatedDist = 0;
     
     // ensure we have options
@@ -79,12 +78,20 @@ function Stroke(points, opts) {
     }
     
     // initialise members
+    this.segments = opts.segments || 63;
     this.name = opts.name;
     this.squareSize = opts.squareSize || 250;
     this.origin = opts.origin || [0, 0];
     
+    // calculated properties
+    this.diagonal = Math.sqrt(this.squareSize * this.squareSize + this.squareSize * this.squareSize);
+    this.halfDiag = this.diagonal * 0.5;
+    this.angleRange = deg2rad(45);
+    this.anglePrecision = deg2rad(2);
+    this.phi = 0.5 * (-1.0 + Math.sqrt(5)); // Golden Ratio
+    
     // calculate the interval length
-    this.interval = pathlen / segmentCount;
+    this.interval = pathlen / this.segments;
     
     // create the points array
     this.points = [[points[0], points[1]]];
@@ -117,7 +124,7 @@ function Stroke(points, opts) {
     }
     
     // somtimes we fall a rounding-error short of adding the last point, so add it if so
-    if (this.points.length === segmentCount) {
+    if (this.points.length === this.segments) {
         this.points[this.points.length] = points.slice(-2);
     }
     
@@ -126,27 +133,60 @@ function Stroke(points, opts) {
     
     // scale the points
     scalePoints(this.points, this.squareSize);
+}
+
+function get(name) {
+    // iterate through the templates and find the best match
+    for (var ii = templates.length; ii--; ) {
+        if (templates[ii].name === name) {
+            return templates[ii];
+        }
+    }
+}
+
+function match(stroke) {
+    // create a new stroke from the points
+    var best = Infinity,
+        selected = 0, d;
     
-    console.log(this);
+    // compare the with the registered templates
+    for (var ii = templates.length; stroke && ii--; ) {
+        var diff = optimalCosineDistance(templates[ii].vector, stroke.vector);
+        
+        // if this is a better match then the current match, then update the best template index
+        if (diff < best) {
+            best = diff;
+            selected = ii;
+        }
+    }
+    
+    // return the best result
+    return {
+        stroke: templates[selected],
+        score:  1 / best
+    };
 }
 
-function unistroke() {
+function unistroke(points) {
+    return match(new Stroke(points));
 }
 
-// expose the defined strokes
-unistroke.strokes = strokes;
+// expose the defined templates
+unistroke.templates = templates;
+unistroke.match = match;
+unistroke.get = get;
 
 // define a template
 unistroke.define = function(name, points) {
-    var stroke = strokes[strokes.length] = new Stroke(points, {
+    var template = templates[templates.length] = new Stroke(points, {
         name: name
     });
     
-    return stroke;
+    return template;
 };
 
 function calcBounds(points) {
-    var minX = +Infinity, maxX = -Infinity, minY = +Infinity, maxY = -Infinity;
+    var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
     
     // iterate through the points and determine 
     for (var ii = 0, count = points.length; ii < count; ii++) {
@@ -192,7 +232,16 @@ function indicativeAngle(points) {
     return Math.atan2(c[1] - points[0][1], c[0] - points[0][0]);
 }
 
-function pathdist() {
+function optimalCosineDistance(v1, v2) {
+    var a = 0, b = 0, angle;
+    
+    for (var ii = 0, count = Math.min(v1.length, v2.length); ii < count; ii += 2) {
+        a += v1[ii] * v2[ii] + v1[ii + 1] * v2[ii + 1];
+        b += v1[ii] * v2[ii + 1] - v1[ii + 1] * v2[ii];
+    }
+    
+    angle = Math.atan(b / a);
+    return b !== 0 ? Math.acos(a * Math.cos(angle) + b * Math.sin(angle)) : 0;
 }
 
 function rotatePoints(points, angle, createNew) {
@@ -279,6 +328,9 @@ function vectorize(points) {
     
     return vector;
 }
+
+function deg2rad(d) { return (d * Math.PI / 180.0); }
+function rad2deg(r) { return (r * 180.0 / Math.PI); }
 
 unistroke.define('left-square-bracket', [
     140, 124,
