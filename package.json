@@ -7,14 +7,14 @@
     "unistroke"
   ],
   "version": "0.1.0",
-  "main": "pkg/cjs/unistroke",
+  "main": "dist/commonjs/unistroke",
   "engines": {
-    "node": ">= 0.4.x < 0.7.0"
+    "node": ">= 0.6.x < 0.9.0"
   },
   "dependencies": {},
   "devDependencies": {
     "expect.js": "0.1.x",
-    "mocha": "1.0.x"
+    "mocha": "1.2.x"
   },
   "repository": {
     "type": "git",

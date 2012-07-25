@@ -1,4 +1,4 @@
-var unistroke = require('../pkg/cjs/unistroke'),
+var unistroke = require('../dist/commonjs/unistroke'),
     expect = require('expect.js'),
     strokes = [
         'left-square-bracket', 

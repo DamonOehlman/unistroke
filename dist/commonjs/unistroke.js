@@ -1,3 +1,6 @@
+
+
+
 /**
  * Unistroke.js
  * Adapted from the washington unistroke recognizer and optimized for speed
@@ -593,4 +596,6 @@ unistroke.define('x', [
      87, 224
 ]);
 
-module.exports = unistroke;
+if (typeof unistroke != 'undefined') {
+    module.exports = unistroke;
+}
