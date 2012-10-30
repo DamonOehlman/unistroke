@@ -1,0 +1,14 @@
+{
+  "name": "unistroke",
+  "repo": "DamonOehlman/unistroke",
+  "description": "Algorithmically equivalent but more Javascripty version of the Washington $1 Unistroke Regognizer",
+  "version": "0.1.1",
+  "keywords": [
+    "gesture",
+    "unistroke"
+  ],
+  "main": "unistroke.js",
+  "scripts": [
+    "unistroke.js"
+  ]
+}
