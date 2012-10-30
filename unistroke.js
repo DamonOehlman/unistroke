@@ -1,6 +1,26 @@
+/* ~unistroke~
+ * 
+ * Algorithmically equivalent but more Javascripty version of the Washington $1 Unistroke Regognizer
+ * 
+ * -meta---
+ * version:    0.1.1
+ * builddate:  2012-10-30T02:24:52.038Z
+ * generator:  interleave@0.5.23
+ * 
+ * 
+ * 
+ */ 
 
-// req: 
-(function(glob) {
+// umdjs returnExports pattern: https://github.com/umdjs/umd/blob/master/returnExports.js
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        module.exports = factory();
+    } else if (typeof define === 'function' && define.amd) {
+        define([], factory);
+    } else {
+        root['unistroke'] = factory();
+    }
+}(this, function () {
     /**
      * Unistroke.js
      * Adapted from the washington unistroke recognizer and optimized for speed
@@ -596,7 +616,5 @@
          87, 224
     ]);
     
-    if (typeof unistroke != 'undefined') {
-        glob.unistroke = unistroke;
-    }
-}(this));
+    return typeof unistroke != 'undefined' ? unistroke : undefined;
+}));
