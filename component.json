@@ -7,8 +7,13 @@
     "gesture",
     "unistroke"
   ],
-  "main": "unistroke.js",
+  "main": "index.js",
   "scripts": [
-    "unistroke.js"
+    "index.js",
+    "stroke.js",
+    "templates/lsb.js",
+    "templates/rsb.js",
+    "templates/triangle.js",
+    "templates/x.js"
   ]
 }
