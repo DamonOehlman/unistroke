@@ -4,6 +4,20 @@
 var Stroke = require('./stroke');
 var templates = [];
 
+/**
+  # Unistroke
+
+  This is a port of the [
+  Washington $1 Unistroke Recognizer
+  ](http://depts.washington.edu/aimgroup/proj/dollar/index.html) to generally make it a little
+  more Javascripty and potentially optimize the code in a few places.
+
+  ## Example Usage
+
+  <<< examples/capture.js
+
+**/
+
 /*
  * Unistroke.js
  * Adapted from the washington unistroke recognizer and optimized for speed
