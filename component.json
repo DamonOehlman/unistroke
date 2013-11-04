@@ -2,7 +2,7 @@
   "name": "unistroke",
   "repo": "DamonOehlman/unistroke",
   "description": "Algorithmically equivalent but more Javascripty version of the Washington $1 Unistroke Regognizer",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "keywords": [
     "gesture",
     "unistroke"
