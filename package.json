@@ -1,28 +1,30 @@
 {
   "name": "unistroke",
   "description": "Algorithmically equivalent but more Javascripty version of the Washington $1 Unistroke Regognizer",
-  "author": "Damon Oehlman <damon.oehlman@sidelab.com>",
-  "tags": [
-    "gesture",
-    "unistroke"
-  ],
+  "author": "Damon Oehlman <damon.oehlman@gmail.com>",
   "version": "0.2.0",
   "dependencies": {},
   "devDependencies": {
-    "expect.js": "0.1.x",
-    "mocha": "1.6.x",
     "tape": "~2.1.0"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/DamonOehlman/unistroke.git"
+    "url": "https://github.com/DamonOehlman/unistroke.git"
   },
   "bugs": {
-    "url": "http://github.com/DamonOehlman/unistroke/issues"
+    "url": "https://github.com/DamonOehlman/unistroke/issues"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --reporter spec"
+    "test": "node test/all.js",
+    "gendocs": "gendocs > README.md"
   },
-  "contributors": [],
-  "optionalDependencies": {}
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "gesture",
+    "unistroke"
+  ],
+  "license": "BSD-2-Clause"
 }
