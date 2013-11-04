@@ -19,6 +19,8 @@ more Javascripty and potentially optimize the code in a few places.
 ERROR: could not find: 
 ```
 
+## Reference
+
 ### Stroke(points, opts)
 
 Register a new stroke using the input `points` and the specified `opts`.
