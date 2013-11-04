@@ -2,7 +2,7 @@
   "name": "unistroke",
   "description": "Algorithmically equivalent but more Javascripty version of the Washington $1 Unistroke Regognizer",
   "author": "Damon Oehlman <damon.oehlman@gmail.com>",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "dependencies": {},
   "devDependencies": {
     "tape": "~2.1.0"
